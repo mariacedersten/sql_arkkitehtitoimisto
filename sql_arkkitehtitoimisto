@@ -193,36 +193,3 @@ VALUES
 (10, '2024-08-15', 450000, 'Yliopiston laajennuksen rakennuslupakustannukset'),
 (10, '2024-09-25', 500000, 'Uudisrakennuksen suunnittelukustannukset');
 
-
-/* Esimerkkejä kyselyistä / Примеры запросов */
-
-/* Kaikkien työntekijöiden otos / Выборка всех сотрудников */
-SELECT * FROM employees;
-
-/* Kaikkien projektien otos asiakastiedoilla / Выборка всех проектов с информацией о клиенте */
-SELECT p.project_id, p.name AS project_name, c.name AS client_name, p.start_date, p.deadline
-FROM projects p
-JOIN clients c ON p.client_id = c.client_id;
-
-/* Valitse kaikki tehtävät tietylle projektille / Выборка всех задач для конкретного проекта */
-SELECT t.task_id, t.title, t.description, t.start_date, t.due_date, e.first_name AS employee_first_name, e.last_name AS employee_last_name
-FROM tasks t
-JOIN employees e ON t.employee_id = e.employee_id
-WHERE t.project_id = 1;
-
-/* Valitse kaikki projektin kulut / Выборка всех расходов по проекту */ 
-SELECT e.expense_id, e.date, e.amount, e.description
-FROM expenses e
-WHERE e.project_id = 1;
-
-/* Valitse keskeneräiset projektit, jotka ovat työn alla / выбрать незаконченные проекты, которые находятся в процессе выполнения */
-SELECT p.project_id, p.name AS project_name, c.name AS client_name, p.start_date, p.deadline, p.status
-FROM projects p
-JOIN clients c ON p.client_id = c.client_id
-WHERE p.status = 'In Progress' AND p.deadline >= CURDATE();
-
-/* Valitse valmistuneet projektit / выбрать завершённые проекты */
-SELECT p.project_id, p.name AS project_name, c.name AS client_name, p.start_date, p.deadline, p.status
-FROM projects p
-JOIN clients c ON p.client_id = c.client_id
-WHERE p.status = 'Completed' AND p.deadline < CURDATE();
