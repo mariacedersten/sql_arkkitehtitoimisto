@@ -1,0 +1,236 @@
+/* arkkitehtitoimisto */
+/* архитектурное бюро */
+CREATE TABLE architect_offices (
+    office_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    address TEXT,
+    city VARCHAR(100),
+    phone VARCHAR(20),
+    email VARCHAR(255)
+);
+
+/* työntekijätaulu (employees) */
+/* Таблица сотрудников (employees) */
+CREATE TABLE employees (
+    employee_id INT AUTO_INCREMENT PRIMARY KEY,
+    first_name VARCHAR(100) NOT NULL,
+    last_name VARCHAR(100) NOT NULL,
+    henkilotunnus CHAR(11) UNIQUE NOT NULL,  
+    position VARCHAR(100),
+    phone VARCHAR(20),
+    email VARCHAR(255) UNIQUE,
+    hire_date DATE DEFAULT CURRENT_DATE,
+    end_date DATE DEFAULT NULL
+);
+
+/* asiakastaulu (clients) */
+/* Таблица клиентов (clients) */
+CREATE TABLE clients (
+    client_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    contact_person VARCHAR(255),
+    phone VARCHAR(20),
+    email VARCHAR(255),
+    address TEXT
+);
+
+/* Projektitaulun luominen (projects) */
+/* Создание таблицы проектов (projects) */
+CREATE TABLE projects (
+    project_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    client_id INT NOT NULL,   
+    start_date DATE,
+    deadline DATE,
+    budget DECIMAL(15, 2),
+    description TEXT,
+    status ENUM('Planned', 'In Progress', 'Completed') DEFAULT 'Planned',
+    FOREIGN KEY (client_id) REFERENCES clients(client_id)
+);
+
+/* Tehtävätaulun luominen (tasks) */
+/* Создание таблицы задач (tasks) */
+CREATE TABLE tasks (
+    task_id INT AUTO_INCREMENT PRIMARY KEY,
+    project_id INT NOT NULL,
+    employee_id INT NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
+    start_date DATE DEFAULT CURRENT_DATE,
+    due_date DATE,
+    status ENUM('Not Started', 'In Progress', 'Completed') DEFAULT 'Not Started',
+    FOREIGN KEY (project_id) REFERENCES projects(project_id),
+    FOREIGN KEY (employee_id) REFERENCES employees(employee_id)
+);
+
+/* Projektin kulutaulu (expenses) */
+/* Таблица затрат на проект (expenses) */
+CREATE TABLE expenses (
+    expense_id INT AUTO_INCREMENT PRIMARY KEY,
+    project_id INT NOT NULL,
+    date DATE DEFAULT CURRENT_DATE,
+    amount DECIMAL(15, 2) NOT NULL,
+    description TEXT,
+    FOREIGN KEY (project_id) REFERENCES projects(project_id)
+);
+
+
+/* Arkkitehtitoimiston tietojen lisäys / Вставка данных о архитектурном бюро */
+INSERT INTO architect_offices (name, address, city, phone, email)
+VALUES ('Arkkitehtitoimisto Cedersten Oy', 'Manergeimentie 56', 'Helsinki', '09 4259 9543', 'info@cedersten.fi');
+
+/* Työntekijän tietojen lisäys / Вставка данных о сотруднике */
+INSERT INTO employees (first_name, last_name, henkilotunnus, position, phone, email, hire_date, end_date)
+VALUES 
+('Maria', 'Cedersten', '111180-438A', 'Arkkitehti SAFA, osakas', '0456911300', 'maria.cedersten@cedersten.fi', '2022-01-01', NULL),
+('Mira', 'Cedersten', '051110A438A','Arkkitehti SAFA, osakas', '0456911398', 'mira.cedersten@cedersten.fi', '2021-06-15', NULL),
+('Oskar', 'Johansson', '030590-439K', 'Rakennesuunnittelija', '0456921301', 'oskar.johansson@cedersten.fi', '2020-03-20', NULL),
+('Anna', 'Ivanova', '061208A436A' , 'Sisustussuunnittelija', '0401234567', 'anna.ivanova@cedersten.fi', '2023-02-10', NULL),
+('Johan', 'Bergman', '030489-457L', 'Maisema-arkkitehti', '0412345678', 'johan.bergman@cedersten.fi', '2019-07-01', '2024-07-01'),
+('Katja', 'Mäkelä', '250479-454L', 'Projektipäällikkö', '0423456789', 'katja.makela@cedersten.fi', '2020-11-25', '2025-12-31'),
+('Pavel', 'Petrov', '140886-77OJ', 'Arkkitehti', '0434567890', 'pavel.petrov@cedersten.fi', '2022-03-15', '2026-03-15'),
+('Lotta', 'Sundström','200682-732D', 'Graafinen suunnittelija', '0445678901', 'lotta.sundstrom@cedersten.fi', '2021-10-01', NULL),
+('Sergey', 'Kuznetsov','250578-453L', 'Tekninen asiantuntija', '0456789012', 'sergey.kuznetsov@cedersten.fi', '2023-04-18', NULL),
+('Kaisa', 'Virtanen', '280299-844S', 'Arkkitehti', '0467890123', 'kaisa.virtanen@cedersten.fi', '2021-05-05', NULL),
+('Mikko', 'Lahtinen','250784-831S', 'Rakennesuunnittelija', '0478901234', 'mikko.lahtinen@cedersten.fi', '2018-08-12', NULL),
+('Elena', 'Sokolova', '240389-838A', 'Arkkitehti', '0489012345', 'elena.sokolova@cedersten.fi', '2020-09-10', NULL),
+('Henrik', 'Lindström','160783-865F', 'Maisema-arkkitehti', '0490123456', 'henrik.lindstrom@cedersten.fi', '2017-02-22', NULL),
+('Sanna', 'Lehtinen','160889-866E', 'Sisustussuunnittelija', '0409123456', 'sanna.lehtinen@interior.fi', '2023-01-30', NULL),
+('Dmitry', 'Ivanov','160193-625F', 'Arkkitehti', '0418123456', 'dmitry.ivanov@cedersten.fi', '2021-11-10', '2025-06-15'),
+('Heidi', 'Karlsson', '120687-864P', 'Graafinen suunnittelija', '0427123456', 'heidi.karlsson@cedersten.fi', '2022-02-20', NULL);
+
+
+/* Asiakkaan tietojen lisäys / Вставка данных о клиенте */
+INSERT INTO clients (client_id, name, contact_person, phone, email, address)
+VALUES 
+(1, 'YIT', 'Matti Mäkinen', '0456789012', 'matti.makinen@yit.fi', '123 Manergementie, Helsinki'),
+(2, 'NCC Finland', 'Laura Virtanen', '0401234567', 'laura.virtanen@ncc.fi', '45 Rakennustie, Espoo'),
+(3, 'Skanska', 'Pekka Lahtinen', '0509876543', 'pekka.lahtinen@skanska.fi', '78 Betonitie, Vantaa'),
+(4, 'SRV Group', 'Anna Korhonen', '0415678901', 'anna.korhonen@srv.fi', '56 Kehätie, Turku'),
+(5, 'Lemminkäinen', 'Jukka Nieminen', '0407654321', 'jukka.nieminen@lemminkainen.fi', '34 Rakentajankatu, Tampere'),
+(6, 'Destia', 'Heidi Lehtonen', '0451230987', 'heidi.lehtonen@destia.fi', '12 Insinöörikatu, Oulu'),
+(7, 'Bonava', 'Antti Salonen', '0409871234', 'antti.salonen@bonava.fi', '89 Modernikatu, Jyväskylä'),
+(8, 'Granlund', 'Juho Hämäläinen', '0445671238', 'juho.hamalainen@granlund.fi', '23 Arkkitehtikatu, Kuopio'),
+(9, 'Fira', 'Kaisa Laakso', '0469876541', 'kaisa.laakso@fira.fi', '45 Talonrakennuskatu, Pori'),
+(10, 'Sweco', 'Ville Mustonen', '0403219876', 'ville.mustonen@sweco.fi', '78 Rakennussuunnittelutie, Vaasa'),
+(11, 'Peab', 'Eveliina Saarinen', '0417654328', 'eveliina.saarinen@peab.fi', '34 Kaupunkikatu, Hämeenlinna'),
+(12, 'Parma', 'Timo Väisänen', '0501235678', 'timo.vaisanen@parma.fi', '56 Arkkitehtuuritie, Lappeenranta'),
+(13, 'JM Suomi', 'Maarit Räsänen', '0408765432', 'maarit.rasanen@jmsuomi.fi', '89 Rakennuskatu, Joensuu'),
+(14, 'Hartela', 'Risto Koskinen', '0447654321', 'risto.koskinen@hartela.fi', '23 Kaupunkirakentajantie, Rovaniemi'),
+(15, 'Rakennusliike Lapti', 'Sanna Tuominen', '0504321987', 'sanna.tuominen@lapti.fi', '67 Pohjolankatu, Lahti');
+
+
+/* Projektin tietojen lisäys / Вставка данных о проекте */
+INSERT INTO projects (name, client_id, start_date, deadline, budget, description)
+VALUES 
+('Helsingin Keskuskirjasto', 1, '2023-01-10', '2024-05-15', 5000000, 'Moderni kirjasto Helsingin sydämessä'),
+('Espoon Yrityspuisto', 2, '2023-03-01', '2024-11-20', 8000000, 'Uusi yrityspuisto innovatiivisille yrityksille'),
+('Vantaan Urheiluareena', 3, '2022-06-15', '2024-03-30', 12000000, 'Huipputason urheiluareena'),
+('Turun Sataman Kehitys', 4, '2023-07-10', '2025-09-25', 15000000, 'Sataman laajennus ja modernisointi'),
+('Tampereen Tiedekeskus', 5, '2023-04-01', '2024-12-15', 7000000, 'Tiedekeskus, joka esittelee suomalaisia innovaatioita'),
+('Oulun Asuinalue', 6, '2022-09-01', '2024-06-30', 18000000, 'Uusi asuinalue Oulussa'),
+('Jyväskylän Musiikkisali', 7, '2023-05-20', '2025-01-15', 9000000, 'Konserttisali, jossa on erinomainen akustiikka'),
+('Lahden Vihreä Kortteli', 8, '2023-02-15', '2024-10-10', 6000000, 'Ympäristöystävällinen asuinalue'),
+('Kuopion Kulttuurikeskus', 9, '2023-08-01', '2025-04-20', 11000000, 'Keskus kulttuuritapahtumille ja -toiminnoille'),
+('Porin Rantapuisto', 10, '2023-06-10', '2024-08-30', 4000000, 'Julkinen puisto rantaviivalla'),
+('Vaasan Yliopiston Laajennus', 11, '2023-03-15', '2025-06-15', 15000000, 'Lisärakennuksia yliopiston kampukselle'),
+('Hämeenlinnan Linnan Restaurointi', 12, '2023-01-20', '2024-12-01', 2000000, 'Historiallisen linnan kunnostus'),
+('Lappeenrannan Taidemuseo', 13, '2023-07-15', '2025-03-10', 7000000, 'Moderni taidemuseo, jossa suomalaisia kokoelmia'),
+('Joensuun Siltarakennus', 14, '2022-11-01', '2024-07-01', 9000000, 'Uusi silta Pielisjoen yli'),
+('Rovaniemen Talviresortti', 15, '2023-09-01', '2025-12-15', 20000000, 'Luksustason talviresortti Lapissa'),
+('Helsingin Metron Laajennus', 1, '2023-04-10', '2026-08-20', 30000000, 'Metrolinjan laajennus uusiin kaupunginosiin'),
+('Espoon Vihreä Toimistotorni', 2, '2023-05-01', '2025-11-15', 18000000, 'Ekologinen toimistotorni'),
+('Vantaan Ilmailumuseo', 3, '2023-02-01', '2024-10-20', 5000000, 'Museo, joka on omistettu suomalaisen ilmailun historialle'),
+('Turun Teknologiakeskus', 4, '2023-08-15', '2025-02-28', 14000000, 'Keskus teknologiayrityksille ja tutkimukselle'),
+('Tampereen Kaupunkikehitys', 5, '2023-03-01', '2026-01-30', 25000000, 'Keskustan uudistaminen ja elävöittäminen');
+
+/* Tehtävän tietojen lisäys / Вставка данных о задаче */
+INSERT INTO tasks (project_id, employee_id, title, description, due_date)
+VALUES 
+(1, 1, 'Arkkitehtisuunnitelma', 'Suunnittele Helsingin keskuskirjaston arkkitehtuuri', '2024-03-01'),
+(1, 2, 'Rakennesuunnitelma', 'Laadi rakennesuunnitelmat Helsingin keskuskirjastolle', '2024-02-15'),
+(2, 3, 'Yrityspuiston yleissuunnitelma', 'Suunnittele Espoon Yrityspuiston yleinen rakenne', '2024-05-10'),
+(2, 4, 'Rakenteiden laskenta', 'Laske rakenteiden kantokyky Espoon Yrityspuistolle', '2024-04-25'),
+(3, 5, 'Urheiluareenan sisustussuunnitelma', 'Suunnittele Vantaan Urheiluareenan sisustus', '2024-03-05'),
+(3, 6, 'Maisemasuunnittelu', 'Laadi maisemasuunnitelma Vantaan Urheiluareenalle', '2024-02-28'),
+(4, 7, 'Sataman laajennussuunnitelma', 'Laadi sataman laajennussuunnitelma Turun Sataman Kehitykselle', '2024-07-01'),
+(4, 8, 'Rakentamisen aikataulu', 'Laadi aikataulu Turun Sataman kehitykselle', '2024-06-20'),
+(5, 9, 'Tiedekeskuksen ulkokuori', 'Suunnittele Tampereen Tiedekeskuksen ulkokuori', '2024-01-15'),
+(5, 10, 'Sisätilasuunnittelu', 'Suunnittele Tampereen Tiedekeskuksen sisätilat', '2024-03-05'),
+(6, 11, 'Asuinalueen infrastruktuuri', 'Suunnittele Oulun Asuinalueen infrastruktuuri', '2024-06-10'),
+(6, 12, 'Maisemasuunnitelma', 'Laadi maisemasuunnitelma Oulun Asuinalueelle', '2024-05-25'),
+(7, 13, 'Musiikkisalin akustiikkasuunnitelma', 'Suunnittele Jyväskylän Musiikkisalin akustiikka', '2024-08-15'),
+(7, 14, 'Sähkösuunnitelma', 'Laadi sähkösuunnitelma Jyväskylän Musiikkisalille', '2024-09-01'),
+(8, 15, 'Kulttuurikeskuksen valaistus', 'Suunnittele Kuopion Kulttuurikeskuksen valaistus', '2024-10-05'),
+(8, 16, 'Rakennuslupahakemus', 'Laadi rakennuslupahakemus Kuopion Kulttuurikeskukselle', '2024-09-15'),
+(9, 17, 'Puistosuunnitelma', 'Suunnittele Porin Rantapuiston puistosuunnitelma', '2024-07-25'),
+(9, 18, 'Rakennussuunnitelma', 'Laadi rakennussuunnitelma Porin Rantapuistolle', '2024-08-15'),
+(10, 19, 'Yliopiston laajennuksen rakennuslupa', 'Hae rakennuslupaa Vaasan Yliopiston laajennukselle', '2024-12-01'),
+(10, 20, 'Uudisrakennuksen suunnittelu', 'Suunnittele Vaasan Yliopiston laajennus', '2024-11-10');
+
+
+/* Projektin kulutietojen lisääminen / Вставка данных о расходах на проект*/
+INSERT INTO expenses (project_id, date, amount, description)
+VALUES
+(1, '2024-01-10', 150000, 'Arkkitehtisuunnittelun kustannukset'),
+(1, '2024-02-15', 200000, 'Rakennesuunnittelun kustannukset'),
+(2, '2024-03-01', 250000, 'Yrityspuiston yleissuunnittelun kustannukset'),
+(2, '2024-04-10', 300000, 'Rakenteiden laskennan kustannukset'),
+(3, '2024-01-25', 100000, 'Sisustussuunnittelun kustannukset'),
+(3, '2024-02-10', 120000, 'Maisemasuunnittelun kustannukset'),
+(4, '2024-06-05', 400000, 'Sataman laajennussuunnittelun kustannukset'),
+(4, '2024-07-01', 500000, 'Rakennusmateriaalin kustannukset'), 
+(5, '2024-02-10', 150000, 'Tiedekeskuksen ulkokuoren kustannukset'),
+(5, '2024-03-01', 180000, 'Sisätilasuunnittelun kustannukset'),
+(6, '2024-05-15', 350000, 'Asuinalueen infrastruktuurin kustannukset'),
+(6, '2024-06-01', 400000, 'Maisemasuunnittelun kustannukset'),
+(7, '2024-06-15', 300000, 'Musiikkisalin akustiikkasuunnittelun kustannukset'),
+(7, '2024-07-01', 320000, 'Sähkösuunnittelun kustannukset'),
+(8, '2024-08-01', 200000, 'Kulttuurikeskuksen valaistuksen kustannukset'),
+(8, '2024-09-05', 250000, 'Rakennuslupahakemuksen kustannukset'),
+(9, '2024-06-15', 130000, 'Puistosuunnittelun kustannukset'),
+(9, '2024-07-10', 160000, 'Rakennussuunnittelun kustannukset'),
+(10, '2024-08-15', 450000, 'Yliopiston laajennuksen rakennuslupakustannukset'),
+(10, '2024-09-25', 500000, 'Uudisrakennuksen suunnittelukustannukset');
+
+
+/* Esimerkkejä kyselyistä / Примеры запросов */
+
+/* Kaikkien työntekijöiden otos / Выборка всех сотрудников */
+sql
+Kopioi koodi
+SELECT * FROM employees;
+
+/* Kaikkien projektien otos asiakastiedoilla / Выборка всех проектов с информацией о клиенте */
+sql
+Kopioi koodi
+SELECT p.project_id, p.name AS project_name, c.name AS client_name, p.start_date, p.deadline
+FROM projects p
+JOIN clients c ON p.client_id = c.client_id;
+
+/* Valitse kaikki tehtävät tietylle projektille / Выборка всех задач для конкретного проекта */
+sql
+Kopioi koodi
+SELECT t.task_id, t.title, t.description, t.start_date, t.due_date, e.first_name AS employee_first_name, e.last_name AS employee_last_name
+FROM tasks t
+JOIN employees e ON t.employee_id = e.employee_id
+WHERE t.project_id = 1;
+
+/* Valitse kaikki projektin kulut / Выборка всех расходов по проекту */ 
+sql
+Kopioi koodi
+SELECT e.expense_id, e.date, e.amount, e.description
+FROM expenses e
+WHERE e.project_id = 1;
+
+/* Valitse keskeneräiset projektit, jotka ovat työn alla / выбрать незаконченные проекты, которые находятся в процессе выполнения */
+SELECT p.project_id, p.name AS project_name, c.name AS client_name, p.start_date, p.deadline, p.status
+FROM projects p
+JOIN clients c ON p.client_id = c.client_id
+WHERE p.status = 'In Progress' AND p.deadline >= CURDATE();
+
+/* Valitse valmistuneet projektit / выбрать завершённые проекты */
+SELECT p.project_id, p.name AS project_name, c.name AS client_name, p.start_date, p.deadline, p.status
+FROM projects p
+JOIN clients c ON p.client_id = c.client_id
+WHERE p.status = 'Completed' AND p.deadline < CURDATE();
