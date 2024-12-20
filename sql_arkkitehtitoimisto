@@ -197,28 +197,20 @@ VALUES
 /* Esimerkkejä kyselyistä / Примеры запросов */
 
 /* Kaikkien työntekijöiden otos / Выборка всех сотрудников */
-sql
-Kopioi koodi
 SELECT * FROM employees;
 
 /* Kaikkien projektien otos asiakastiedoilla / Выборка всех проектов с информацией о клиенте */
-sql
-Kopioi koodi
 SELECT p.project_id, p.name AS project_name, c.name AS client_name, p.start_date, p.deadline
 FROM projects p
 JOIN clients c ON p.client_id = c.client_id;
 
 /* Valitse kaikki tehtävät tietylle projektille / Выборка всех задач для конкретного проекта */
-sql
-Kopioi koodi
 SELECT t.task_id, t.title, t.description, t.start_date, t.due_date, e.first_name AS employee_first_name, e.last_name AS employee_last_name
 FROM tasks t
 JOIN employees e ON t.employee_id = e.employee_id
 WHERE t.project_id = 1;
 
 /* Valitse kaikki projektin kulut / Выборка всех расходов по проекту */ 
-sql
-Kopioi koodi
 SELECT e.expense_id, e.date, e.amount, e.description
 FROM expenses e
 WHERE e.project_id = 1;
