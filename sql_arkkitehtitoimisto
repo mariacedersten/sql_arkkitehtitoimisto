@@ -96,7 +96,8 @@ VALUES
 ('Henrik', 'Lindström','160783-865F', 'Maisema-arkkitehti', '0490123456', 'henrik.lindstrom@cedersten.fi', '2017-02-22', NULL),
 ('Sanna', 'Lehtinen','160889-866E', 'Sisustussuunnittelija', '0409123456', 'sanna.lehtinen@interior.fi', '2023-01-30', NULL),
 ('Dmitry', 'Ivanov','160193-625F', 'Arkkitehti', '0418123456', 'dmitry.ivanov@cedersten.fi', '2021-11-10', '2025-06-15'),
-('Heidi', 'Karlsson', '120687-864P', 'Graafinen suunnittelija', '0427123456', 'heidi.karlsson@cedersten.fi', '2022-02-20', NULL);
+('Heidi', 'Karlsson', '120687-864P', 'Graafinen suunnittelija', '0427123456', 'heidi.karlsson@cedersten.fi', '2022-02-20', NULL),
+('Teemu', 'Berglind', '130184-377L', 'Rakennesuunnittelija', '0427847027', 'teemu.berglind@cedersten.fi', '2022-01-01', NULL);
 
 
 /* Asiakkaan tietojen lisäys / Вставка данных о клиенте */
