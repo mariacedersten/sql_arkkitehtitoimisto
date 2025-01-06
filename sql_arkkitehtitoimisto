@@ -1,7 +1,7 @@
 /* arkkitehtitoimisto */
 /* архитектурное бюро */
 CREATE TABLE architect_offices (
-    office_id INT AUTO_INCREMENT PRIMARY KEY,
+    office_id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     address TEXT,
     city VARCHAR(100),
@@ -12,7 +12,7 @@ CREATE TABLE architect_offices (
 /* työntekijätaulu (employees) */
 /* Таблица сотрудников (employees) */
 CREATE TABLE employees (
-    employee_id INT AUTO_INCREMENT PRIMARY KEY,
+    employee_id SERIAL PRIMARY KEY,
     first_name VARCHAR(100) NOT NULL,
     last_name VARCHAR(100) NOT NULL,
     henkilotunnus CHAR(11) UNIQUE NOT NULL,  
@@ -20,13 +20,13 @@ CREATE TABLE employees (
     phone VARCHAR(20),
     email VARCHAR(255) UNIQUE,
     hire_date DATE DEFAULT CURRENT_DATE,
-    end_date DATE DEFAULT NULL
+    end_date DATE
 );
 
 /* asiakastaulu (clients) */
 /* Таблица клиентов (clients) */
 CREATE TABLE clients (
-    client_id INT AUTO_INCREMENT PRIMARY KEY,
+    client_id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     contact_person VARCHAR(255),
     phone VARCHAR(20),
@@ -37,28 +37,28 @@ CREATE TABLE clients (
 /* Projektitaulun luominen (projects) */
 /* Создание таблицы проектов (projects) */
 CREATE TABLE projects (
-    project_id INT AUTO_INCREMENT PRIMARY KEY,
+    project_id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     client_id INT NOT NULL,   
     start_date DATE,
     deadline DATE,
-    budget DECIMAL(15, 2),
+    budget NUMERIC(15, 2),
     description TEXT,
-    status ENUM('Planned', 'In Progress', 'Completed') DEFAULT 'Planned',
+    status VARCHAR(20) DEFAULT 'Planned' CHECK (status IN ('Planned', 'In Progress', 'Completed')),
     FOREIGN KEY (client_id) REFERENCES clients(client_id)
 );
 
 /* Tehtävätaulun luominen (tasks) */
 /* Создание таблицы задач (tasks) */
 CREATE TABLE tasks (
-    task_id INT AUTO_INCREMENT PRIMARY KEY,
+    task_id SERIAL PRIMARY KEY,
     project_id INT NOT NULL,
     employee_id INT NOT NULL,
     title VARCHAR(255) NOT NULL,
     description TEXT,
     start_date DATE DEFAULT CURRENT_DATE,
     due_date DATE,
-    status ENUM('Not Started', 'In Progress', 'Completed') DEFAULT 'Not Started',
+    status VARCHAR(20) DEFAULT 'Not Started' CHECK (status IN ('Not Started', 'In Progress', 'Completed')),
     FOREIGN KEY (project_id) REFERENCES projects(project_id),
     FOREIGN KEY (employee_id) REFERENCES employees(employee_id)
 );
@@ -66,14 +66,13 @@ CREATE TABLE tasks (
 /* Projektin kulutaulu (expenses) */
 /* Таблица затрат на проект (expenses) */
 CREATE TABLE expenses (
-    expense_id INT AUTO_INCREMENT PRIMARY KEY,
+    expense_id SERIAL PRIMARY KEY,
     project_id INT NOT NULL,
     date DATE DEFAULT CURRENT_DATE,
-    amount DECIMAL(15, 2) NOT NULL,
+    amount NUMERIC(15, 2) NOT NULL,
     description TEXT,
     FOREIGN KEY (project_id) REFERENCES projects(project_id)
 );
-
 
 /* Arkkitehtitoimiston tietojen lisäys / Вставка данных о архитектурном бюро */
 INSERT INTO architect_offices (name, address, city, phone, email)
