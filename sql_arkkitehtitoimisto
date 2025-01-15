@@ -193,3 +193,12 @@ VALUES
 (10, '2024-08-15', 450000, 'Yliopiston laajennuksen rakennuslupakustannukset'),
 (10, '2024-09-25', 500000, 'Uudisrakennuksen suunnittelukustannukset');
 
+
+Palaute
+Suurin osa virheistä on veks, sain enää tällaisen:
+
+ERROR:  insert or update on table "tasks" violates foreign key constraint "tasks_employee_id_fkey"
+DETAIL:  Key (employee_id)=(18) is not present in table "employees".
+
+Joten hyvää työtä, näyttää SQL:ltä ja tietokannalta, kiitos palautuksesta!
+
